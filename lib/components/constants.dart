@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elmanhag_app/components/size_config.dart';
+import 'package:elmanhag_app/homeScreen/homeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:html/parser.dart';
+
+import '../search_class.dart';
 
 const kPrimaryColor = Color(0x2972B7);
 const kGreenColor = Color(0x03AB6A);
@@ -17,15 +20,13 @@ const kAnimationDuration = Duration(milliseconds: 200);
 
 final headingStyle = TextStyle(
   fontSize: getProportionateScreenWidth(28),
-  fontFamily: 'Helvetica',
+  fontFamily: 'Khebrat Musamim',
   fontWeight: FontWeight.bold,
   color: Colors.black,
-  height: 1.5,
 );
 
 final subheadingStyle = TextStyle(
-  fontSize: 14,
-  fontFamily: 'Helvetica',
+  fontFamily: 'Khebrat Musamim',
   fontWeight: FontWeight.w400,
   color: Colors.grey,
 );
@@ -110,22 +111,21 @@ String parseHtmlString(String htmlString) {
   return parsedString;
 }
 
-String gitnewPrice({required String descaound, required String price}) {
-  double oldPrice;
-  oldPrice = double.parse(price) - double.parse(descaound);
-  return oldPrice.toString();
-}
-
-/////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 customCachedNetworkImage(
-    {required String url, required context, required BoxFit fit}) {
+    {required String url,
+    required context,
+    required BoxFit fit,
+    required String title}) {
   try {
     // ignore: unnecessary_null_comparison
     if (url == null || url == "") {
       return Container(
-        child: Icon(
-          Icons.error,
-          color: HexColor("#AB0D03"),
+        child: Image.asset(
+          "assets/images/logo2021.png",
+          height: 100,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.contain,
         ),
       );
     } else {
@@ -139,18 +139,106 @@ customCachedNetworkImage(
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) {
-                  return Icon(
-                    Icons.error,
-                    color: HexColor("#AB0D03"),
+                  return Column(
+                    textDirection: TextDirection.rtl,
+                    children: [
+                      Image.asset(
+                        "assets/images/logo2021.png",
+                        height: 100,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.contain,
+                      ),
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: headingStyle.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: HexColor("#323232")),
+                      )
+                    ],
                   );
                 })
-            : Icon(
-                Icons.error,
-                color: HexColor("#AB0D03"),
+            : Column(
+                textDirection: TextDirection.rtl,
+                children: [
+                  Image.asset(
+                    "assets/images/logo2021.png",
+                    height: 100,
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.contain,
+                  ),
+                  Text(
+                    title,
+                    style: headingStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                ],
               ),
       );
     }
   } catch (e) {
     print(e.toString());
   }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+
+Future<void> showMyDialog(
+    {required BuildContext context,
+    required String title,
+    required Widget data}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        title: data,
+      );
+    },
+  );
+}
+/////////////////////////////////////////////////////////
+
+customeAppbar({required BuildContext context, required VoidCallback press}) {
+  return AppBar(
+    automaticallyImplyLeading: false,
+    backgroundColor: Colors.white,
+    elevation: 0.0,
+    title: InkWell(
+      onTap: () {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (route) => false);
+      },
+      child: Image.asset(
+        "assets/images/logo2021-2.png",
+        width: 130,
+        height: 60,
+        fit: BoxFit.contain,
+      ),
+    ),
+    actions: [
+      IconButton(
+          onPressed: () {
+            showSearch(context: context, delegate: LessonpapersSearch());
+          },
+          icon: Icon(
+            Icons.search,
+            color: Colors.black,
+            size: 35,
+          )),
+      IconButton(
+          onPressed: press,
+          icon: Icon(
+            Icons.format_align_justify,
+            color: Colors.black,
+            size: 30,
+          )),
+    ],
+  );
 }

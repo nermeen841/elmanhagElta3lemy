@@ -23,8 +23,10 @@ class DefaultButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.white,
-          ),
+              color: Colors.white,
+              fontFamily: 'Khebrat Musamim',
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
         ),
       ),
     );
