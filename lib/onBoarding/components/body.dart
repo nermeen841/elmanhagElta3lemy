@@ -1,6 +1,5 @@
 import 'package:elmanhag_app/components/constants.dart';
 import 'package:flutter/material.dart';
-
 import 'onBoarding_content.dart';
 
 class Body extends StatefulWidget {
